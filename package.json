@@ -12,7 +12,14 @@
     "expo": "~52.0.32",
     "expo-status-bar": "~2.0.1",
     "react": "18.3.1",
-    "react-native": "0.76.7"
+    "react-native": "0.76.7",
+    "react-native-ambient-light-sensor": "^1.0.3",
+    "react-native-sensors": "^4.1.0",
+    "react-native-vision-camera": "^4.6.3",
+    "react-native-reanimated": "~3.16.1",
+    "react-native-gesture-handler": "~2.20.2",
+    "expo-camera": "~16.0.16",
+    "expo-image-manipulator": "~13.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
