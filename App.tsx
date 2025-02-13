@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground, Dimensions, Image } from "react-native";
+import { 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Alert, 
+  ImageBackground, 
+  Dimensions, 
+  Image 
+} from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
 
-const { width, height } = Dimensions.get("window"); // Pega as dimensões da tela
-const cameraSize = width * 0.6; // Define um quadrado de 60% da largura da tela
+const { width, height } = Dimensions.get("window");
+const cameraSize = width * 0.6;
 
 export default function App() {
   const [hasPermission, requestPermission] = useCameraPermissions();
@@ -56,12 +65,10 @@ export default function App() {
 
   const handleLeftIconPress = () => {
     Alert.alert("Ícone esquerdo pressionado!");
-    // Adicione aqui a ação desejada para o ícone esquerdo
   };
 
   const handleRightIconPress = () => {
     Alert.alert("Ícone direito pressionado!");
-    // Adicione aqui a ação desejada para o ícone direito
   };
 
   if (!hasPermission) {
@@ -75,27 +82,24 @@ export default function App() {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("./assets/fundo.png")} // Substitua pelo caminho correto
+        source={require("./assets/fundo.png")}
         style={styles.background}
         resizeMode="cover"
       >
-        {/* Ícone no canto superior esquerdo */}
         <TouchableOpacity onPress={handleLeftIconPress} style={styles.leftIcon}>
           <Image
-            source={require("./assets/Atencao.png")} // Caminho da imagem do ícone esquerdo
-            style={styles.leftIconImage} // Estilo personalizado para o ícone esquerdo
+            source={require("./assets/Atencao.png")}
+            style={styles.leftIconImage}
           />
         </TouchableOpacity>
 
-        {/* Ícone no canto superior direito */}
         <TouchableOpacity onPress={handleRightIconPress} style={styles.rightIcon}>
           <Image
-            source={require("./assets/User.png")} // Caminho da imagem do ícone direito
-            style={styles.rightIconImage} // Estilo personalizado para o ícone direito
+            source={require("./assets/User.png")}
+            style={styles.rightIconImage}
           />
         </TouchableOpacity>
 
-        {/* Conteúdo centralizado (câmera e texto PPFD) */}
         <View style={styles.content}>
           <View style={styles.cameraContainer}>
             <CameraView ref={cameraRef} style={styles.camera} ratio="1:1" />
@@ -103,11 +107,10 @@ export default function App() {
           <Text style={styles.text}>PPFD: {ppfd.toFixed(2)} µmol/m²/s</Text>
         </View>
 
-        {/* Botão "Medir Luz" como ícone clicável */}
         <TouchableOpacity onPress={analyzeLight} style={styles.iconButton}>
           <Image
-            source={require("./assets/Luz.png")} // Caminho da imagem do ícone
-            style={styles.bottomIconImage} // Estilo personalizado para o ícone inferior
+            source={require("./assets/Luz.png")}
+            style={styles.bottomIconImage}
           />
         </TouchableOpacity>
       </ImageBackground>
@@ -135,10 +138,11 @@ const styles = StyleSheet.create({
   cameraContainer: {
     width: cameraSize,
     height: cameraSize,
-    borderRadius: 10,
+    borderRadius: 30,
     overflow: "hidden",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "black",
   },
   camera: {
     width: "100%",
@@ -148,38 +152,47 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
-  },
-  iconButton: {
-    position: "absolute", // Posiciona o ícone de forma absoluta
-    bottom: 20, // Distância da parte inferior
-    alignSelf: "center", // Centraliza horizontalmente
+    color: "#FFF",
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
   leftIcon: {
-    position: "absolute", // Posiciona o ícone de forma absoluta
-    top: 20, // Distância do topo
-    left: 20, // Distância da esquerda
+    position: "absolute",
+    top: 20,
+    left: 10,
+    width: 100,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   rightIcon: {
-    position: "absolute", // Posiciona o ícone de forma absoluta
-    top: 20, // Distância do topo
-    right: 20, // Distância da direita
+    position: "absolute",
+    top: 20,
+    right: 10,
+    width: 100,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconButton: {
+    position: "absolute",
+    bottom: 110,
+    alignSelf: "center",
   },
   leftIconImage: {
-    width: 90, // Largura do ícone esquerdo
-    height: 40, // Altura do ícone esquerdo
-    resizeMode: "contain", // Mantém a proporção da imagem
-    // Cor personalizada para o ícone esquerdo
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
   },
   rightIconImage: {
-    width: 90, // Largura do ícone direito
-    height: 50, // Altura do ícone direito
-    resizeMode: "contain", // Mantém a proporção da imagem
-   // Cor personalizada para o ícone direito
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
   },
   bottomIconImage: {
     width: 80,
-    height: 210,
+    height: 80,
     resizeMode: "contain",
   },
 });
