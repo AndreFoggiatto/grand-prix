@@ -14,8 +14,13 @@ import * as ImageManipulator from "expo-image-manipulator";
 
 const { width, height } = Dimensions.get("window");
 const cameraSize = width * 0.6;
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Login from "./pages/login/login"; // Página de Login
 
-export default function App() {
+const Stack = createStackNavigator();
+
+function HomeScreen() {
   const [hasPermission, requestPermission] = useCameraPermissions();
   const [ppfd, setPpfd] = useState(0);
   const cameraRef = useRef<CameraView>(null);
@@ -33,16 +38,17 @@ export default function App() {
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
 
       const manipulatedImage = await ImageManipulator.manipulateAsync(
-        photo?.uri ?? '',
+        photo?.uri ?? "",
         [],
         { base64: true }
       );
 
-      if (!manipulatedImage.base64) return Alert.alert("Erro ao processar a imagem.");
+      if (!manipulatedImage.base64)
+        return Alert.alert("Erro ao processar a imagem.");
 
       const brightness = estimateBrightness(manipulatedImage.base64);
-      setPpfd(brightness * 0.0185);
-
+      setLux(brightness);
+      setPpfd(brightness * 0.0185); // Conversão aproximada de Lux → PPFD
     } catch (error) {
       Alert.alert("Erro ao capturar a imagem");
     }
@@ -115,6 +121,17 @@ export default function App() {
         </TouchableOpacity>
       </ImageBackground>
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
