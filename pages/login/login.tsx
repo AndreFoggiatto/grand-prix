@@ -1,10 +1,40 @@
-import React from "react";
-import { Text, View, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Dimensions } from "react-native";
+import React, { useState } from "react";
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, Alert } from "react-native";
+import axios from "axios";
 
-// Pega as dimensões da tela
 const { width, height } = Dimensions.get('window');
 
 export default function Login({ navigation }: any) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post("http://localhost:5000/login", {
+                username: email,
+                password: password
+            });
+
+            if (response.status === 200) {
+                // Exibe mensagem de sucesso e navega para a próxima tela
+                Alert.alert("Login bem-sucedido");
+                // Aqui você pode salvar o token em um armazenamento seguro (AsyncStorage, SecureStore, etc.)
+                const token = response.data.token;
+                console.log("Token recebido:", token);
+                navigation.replace("Home");
+            }
+            else {
+                Alert.alert("Erro ao realizar o login, verifique seu username e senha");
+            }
+        } catch (error: any) {
+            if (error.response && error.response.data.message) {
+                Alert.alert("Erro", error.response.data.message);
+            } else {
+                Alert.alert("Erro", "Ocorreu um erro ao tentar fazer login.");
+            }
+        }
+    };
+
     return (
         <View style={styles.containerMain}>
             <View style={styles.background}>
@@ -12,14 +42,27 @@ export default function Login({ navigation }: any) {
                     <Text style={styles.title}>Login</Text>
 
                     <View style={styles.inputContainer}>
-                        <TextInput style={styles.input} keyboardType="email-address" placeholder="E-mail:" placeholderTextColor="#493224" />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nome de usuário:"
+                            placeholderTextColor="#493224"
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}
+                        />
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <TextInput style={styles.input} secureTextEntry placeholder="Senha:" placeholderTextColor="#493224" />
+                        <TextInput
+                            style={styles.input}
+                            secureTextEntry
+                            placeholder="Senha:"
+                            placeholderTextColor="#493224"
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
+                        />
                     </View>
 
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.replace("Home")}>
+                    <TouchableOpacity style={styles.button} onPress={handleLogin}>
                         <Text style={styles.buttonText}>Entrar</Text>
                     </TouchableOpacity>
                 </View>
@@ -42,21 +85,21 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     containerImage: {
-        position: "absolute", // Faz com que a imagem tenha um posicionamento absoluto
-        bottom: 0, // Fixa a imagem na parte inferior
-        right: 0, // Fixa a imagem no lado direito
-        width: '100%', // Ajuste o tamanho conforme necessário
-        height: 500, // Ajuste o tamanho conforme necessário
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        width: '100%',
+        height: 500,
     },
     image: {
-        width: "100%", // Ajusta a largura da imagem para a largura do container
-        height: "100%", // Ajusta a altura da imagem para a altura do container
+        width: "100%",
+        height: "100%",
     },
     background: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        position: "absolute", // Faz com que o fundo ocupe toda a tela
+        position: "absolute",
         top: 0,
         left: 0,
         right: 0,
