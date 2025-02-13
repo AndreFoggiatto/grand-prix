@@ -2,8 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Text, Button, StyleSheet, Alert } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Login from "./pages/login/login"; // Página de Login
 
-export default function App() {
+const Stack = createStackNavigator();
+
+function HomeScreen() {
   const [hasPermission, requestPermission] = useCameraPermissions();
   const [lux, setLux] = useState(0);
   const [ppfd, setPpfd] = useState(0);
@@ -25,17 +30,17 @@ export default function App() {
 
       // Utilize a função correta para manipulação da imagem
       const manipulatedImage = await ImageManipulator.manipulateAsync(
-        photo?.uri ?? '', // URI da imagem
-        [], // Nenhuma manipulação de imagem aqui, mas você pode adicionar transformações como redimensionamento ou rotação
+        photo?.uri ?? "",
+        [],
         { base64: true }
       );
 
-      if (!manipulatedImage.base64) return Alert.alert("Erro ao processar a imagem.");
+      if (!manipulatedImage.base64)
+        return Alert.alert("Erro ao processar a imagem.");
 
       const brightness = estimateBrightness(manipulatedImage.base64);
       setLux(brightness);
       setPpfd(brightness * 0.0185); // Conversão aproximada de Lux → PPFD
-
     } catch (error) {
       Alert.alert("Erro ao capturar a imagem");
     }
@@ -67,11 +72,22 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <Text>Brilho estimado: {lux.toFixed(2)} Lux</Text>
+      <Text>PPFD estimado: {ppfd.toFixed(2)}</Text>
       <CameraView ref={cameraRef} style={styles.camera} />
-      <Button title="Medir Luz" onPress={analyzeLight} />
-      <Text>Lux estimado: {lux.toFixed(2)}</Text>
-      <Text>PPFD estimado: {ppfd.toFixed(2)} µmol/m²/s</Text>
+      <Button title="Analisar Luz" onPress={analyzeLight} />
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
