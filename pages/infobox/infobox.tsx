@@ -12,7 +12,7 @@ export default function InfoBox({ navigation }: any) {
                     style={styles.backIcon}
                 />
             </TouchableOpacity>
-            <Text style={styles.functionalityText}>Funcionalidade</Text> {/* Alterado */}
+            <Text style={styles.functionalityText}>Funcionalidade</Text>
             <Text style={styles.text}>
                 Este aplicativo mede a intensidade da luz capturada pela câmera do dispositivo, estimando o brilho em lux e convertendo para PPFD (Fluxo de Fótons Fotossintéticos). Além disso, ele analisa os valores de RGB (Vermelho, Verde e Azul) da imagem para calcular a luminosidade média, proporcionando uma estimativa precisa da luz disponível para o crescimento das plantas.
             </Text>
@@ -23,8 +23,8 @@ export default function InfoBox({ navigation }: any) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",  // Centraliza verticalmente
-        alignItems: "flex-start",  // Alinha o conteúdo à esquerda
+        justifyContent: "center",
+        alignItems: "flex-start",
         padding: 20,
         backgroundColor: "#D8D8D8",
         width: "100%",
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: "center",
         alignItems: "center",
-        zIndex: 10, // Garante que fique acima de outros elementos
-        elevation: 10, // Para Android
+        zIndex: 10,
+        elevation: 10,
         backgroundColor: "transparent",
     },
     backIcon: {
@@ -50,17 +50,17 @@ const styles = StyleSheet.create({
         fontSize: 32,
         fontWeight: "bold",
         color: "#000",
-        marginTop: 20,  // Ajuste para mover mais para cima
+        marginTop: 20,
         marginBottom: 10,
-        textAlign: "left",  // Alinha o texto à esquerda
-        width: "100%", // Garante que o texto ocupe toda a largura da tela
+        textAlign: "left",
+        width: "100%",
     },
     text: {
         fontSize: 18,
         color: "#493224",
         fontWeight: "bold",
-        marginTop: 20,  // Para evitar sobreposição com o texto de funcionalidade
-        textAlign: "left",  // Alinha o texto à esquerda
-        width: "100%", // Garante que o texto ocupe toda a largura da tela
+        marginTop: 20,
+        textAlign: "left",
+        width: "100%",
     },
 });
