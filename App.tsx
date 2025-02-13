@@ -18,10 +18,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/login/login"; // Página de Login
 import Register from './pages/register/register' // Paginna de cadastro
+import InfoBox from "./pages/infobox/infobox"; // pagina da infobox
 
 const Stack = createStackNavigator();
 
-function HomeScreen() {
+function HomeScreen({ navigation }: any) {
   const [hasPermission, requestPermission] = useCameraPermissions();
   const [ppfd, setPpfd] = useState(0);
   const cameraRef = useRef<CameraView>(null);
@@ -69,10 +70,6 @@ function HomeScreen() {
     return brightness / count;
   };
 
-  const handleLeftIconPress = () => {
-    Alert.alert("Ícone esquerdo pressionado!");
-  };
-
   const handleRightIconPress = () => {
     Alert.alert("Ícone direito pressionado!");
   };
@@ -92,8 +89,8 @@ function HomeScreen() {
         style={styles.background}
         resizeMode="cover"
       >
-        <TouchableOpacity onPress={handleLeftIconPress} style={styles.leftIcon}>
-          <Image
+<TouchableOpacity onPress={() => navigation.navigate("InfoBox")} style={styles.leftIcon}>
+<Image
             source={require("./assets/Atencao.png")}
             style={styles.leftIconImage}
           />
@@ -131,6 +128,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="InfoBox" component={InfoBox} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -183,15 +181,21 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-  },
+    zIndex: 10, // Garante que fique acima de outros elementos
+    elevation: 10, // Para Android
+    backgroundColor: "transparent",
+  },  
   rightIcon: {
     position: "absolute",
     top: 20,
-    right: 10,
+    right: 20,
     width: 100,
     height: 50,
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 10, // Garante que fique acima de outros elementos
+    elevation: 10, // Para Android
+    backgroundColor: "transparent",
   },
   iconButton: {
     position: "absolute",
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
   leftIconImage: {
     width: 60,
     height: 60,
-    resizeMode: "contain",
+    resizeMode: "contain"
   },
   rightIconImage: {
     width: 60,
