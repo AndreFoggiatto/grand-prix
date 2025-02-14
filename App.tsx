@@ -17,6 +17,7 @@ const cameraSize = width * 0.6;
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/login/login"; // Página de Login
+import Register from './pages/register/register' // Paginna de cadastro
 
 const Stack = createStackNavigator();
 
@@ -47,7 +48,6 @@ function HomeScreen() {
         return Alert.alert("Erro ao processar a imagem.");
 
       const brightness = estimateBrightness(manipulatedImage.base64);
-      setLux(brightness);
       setPpfd(brightness * 0.0185); // Conversão aproximada de Lux → PPFD
     } catch (error) {
       Alert.alert("Erro ao capturar a imagem");
@@ -129,6 +129,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
