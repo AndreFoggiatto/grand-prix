@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Alert, 
-  ImageBackground, 
-  Dimensions, 
-  Image 
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ImageBackground,
+  Dimensions,
+  Image
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -17,7 +17,9 @@ const cameraSize = width * 0.6;
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./pages/login/login"; // Página de Login
-import Register from './pages/register/register' // Paginna de cadastro
+import Register from './pages/register/register' // Página de cadastro
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createStackNavigator();
 
@@ -69,6 +71,24 @@ function HomeScreen() {
     return brightness / count;
   };
 
+  const savePpfd = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      console.log(userId)
+      const response = await axios.post("http://localhost:5000/save_sensor_data", {
+        ppfd: ppfd.toFixed(2),
+        user_id: userId
+      });
+
+      console.log(response)
+
+      Alert.alert("Sucesso!", `PPFD salvo com sucesso: ${ppfd.toFixed(2)} µmol/m²/s`);
+    } catch (error) {
+      Alert.alert("Erro", "Ocorreu um erro ao tentar salvar os dados.");
+    }
+  };
+
+
   const handleLeftIconPress = () => {
     Alert.alert("Ícone esquerdo pressionado!");
   };
@@ -111,6 +131,9 @@ function HomeScreen() {
             <CameraView ref={cameraRef} style={styles.camera} ratio="1:1" />
           </View>
           <Text style={styles.text}>PPFD: {ppfd.toFixed(2)} µmol/m²/s</Text>
+          <TouchableOpacity onPress={savePpfd} style={styles.saveButton}>
+            <Text style={styles.saveButtonText}>Salvar</Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity onPress={analyzeLight} style={styles.iconButton}>
@@ -212,5 +235,18 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     resizeMode: "contain",
+  },
+  saveButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#28a745",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  saveButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

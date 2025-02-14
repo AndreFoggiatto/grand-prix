@@ -1,10 +1,31 @@
-import React from "react";
-import { Text, View, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Dimensions } from "react-native";
+import React, { useState } from "react";
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, Alert } from "react-native";
+import axios from "axios";
 
 // Pega as dimensões da tela
 const { width, height } = Dimensions.get('window');
 
 export default function Register({ navigation }: any) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleRegister = async () => {
+        try {
+            const response = await axios.post("http://localhost:5000/register", {
+                username: email,
+                password: password
+            });
+
+            if (response.status === 201) {
+                Alert.alert("Registro bem-sucedido");
+                navigation.replace("Login");
+            } else {
+                Alert.alert("Erro ao registrar, tente novamente");
+            }
+        } catch (error: any) {
+            Alert.alert("Erro ao registrar, verifique suas informações");
+        }
+    };
     return (
         <View style={styles.containerMain}>
             <View style={styles.background}>
@@ -12,18 +33,28 @@ export default function Register({ navigation }: any) {
                     <Text style={styles.title}>Registrar</Text>
 
                     <View style={styles.inputContainer}>
-                        <TextInput style={styles.input} keyboardType="email-address" placeholder="E-mail:" placeholderTextColor="#493224" />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nome de usuário:"
+                            placeholderTextColor="#493224"
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}
+                        />
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <TextInput style={styles.input} secureTextEntry placeholder="Senha:" placeholderTextColor="#493224" />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.input} secureTextEntry placeholder="Senha:" placeholderTextColor="#493224" />
+                        <TextInput
+                            style={styles.input}
+                            secureTextEntry
+                            placeholder="Senha:"
+                            placeholderTextColor="#493224"
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
+                        />
                     </View>
 
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.replace("Home")}>
-                        <Text style={styles.buttonText}>Entrar</Text>
+                    <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                        <Text style={styles.buttonText}>Registrar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.loginButton} onPress={() => navigation.replace("Login")}>
                         <Text style={styles.loginButtonText}>Já tem uma conta? Faça login</Text>
@@ -57,12 +88,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
     },
-    
+
     loginButtonText: {
         fontSize: 16,
         fontWeight: "bold",
         color: "#fff", // Texto branco para contraste
-    },    
+    },
     containerImage: {
         position: "absolute", // Faz com que a imagem tenha um posicionamento absoluto
         bottom: 0, // Fixa a imagem na parte inferior

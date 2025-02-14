@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, Alert } from "react-native";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,8 +20,10 @@ export default function Login({ navigation }: any) {
                 // Exibe mensagem de sucesso e navega para a próxima tela
                 Alert.alert("Login bem-sucedido");
                 // Aqui você pode salvar o token em um armazenamento seguro (AsyncStorage, SecureStore, etc.)
-                const token = response.data.token;
-                console.log("Token recebido:", token);
+                const userId = response.data.user_id;
+                console.log("User id recebido:", userId);
+                await AsyncStorage.setItem("userId", userId);
+
                 navigation.replace("Home");
             }
             else {
@@ -28,9 +31,9 @@ export default function Login({ navigation }: any) {
             }
         } catch (error: any) {
             if (error.response && error.response.data.message) {
-                Alert.alert("Erro", error.response.data.message);
+                Alert.alert("Erro ao realizar o login, verifique seu username e senha");
             } else {
-                Alert.alert("Erro", "Ocorreu um erro ao tentar fazer login.");
+                Alert.alert("Erro ao realizar o login, verifique seu username e senha");
             }
         }
     };
@@ -64,6 +67,9 @@ export default function Login({ navigation }: any) {
 
                     <TouchableOpacity style={styles.button} onPress={handleLogin}>
                         <Text style={styles.buttonText}>Entrar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.replace("Register")}>
+                        <Text >Já tem uma conta? Faça login</Text>
                     </TouchableOpacity>
                 </View>
             </View>
